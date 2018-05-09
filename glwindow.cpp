@@ -12,7 +12,8 @@ struct VertexData
 GLWindow::GLWindow():
     IboBuf(QOpenGLBuffer::IndexBuffer),
     texture(nullptr),
-    texture1(nullptr)
+    texture1(nullptr),
+    alpha(0.2f)
 {
 }
 
@@ -36,10 +37,10 @@ void GLWindow::initializeGL()
     initTextures();
 
     VertexData vertices[] = {
-        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(2.0f, 2.0f), QVector3D(1.0f, 0.0f, 0.0f)},       // 右上
-        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(2.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
+        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},       // 右上
+        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(1.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
         {QVector3D(-0.5f, -0.5f, 0.0f), QVector2D(0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f)},     // 左下
-        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 2.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
+        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
     };
 
     GLuint indexs[] = {
@@ -70,6 +71,7 @@ void GLWindow::initializeGL()
 
     shaderProgram.setUniformValue("ourTexture1",0);
     shaderProgram.setUniformValue("ourTexture2",1);
+    shaderProgram.setUniformValue("alpha",alpha);
 
     VaoObj.release();
     VboBuf.release();
@@ -86,6 +88,7 @@ void GLWindow::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.bind();
+    shaderProgram.setUniformValue("alpha",alpha);
         glActiveTexture(GL_TEXTURE0);
         texture->bind();
         glActiveTexture(GL_TEXTURE1);
@@ -95,7 +98,25 @@ void GLWindow::paintGL()
             VaoObj.release();
         texture1->release();
         texture->release();
-    shaderProgram.release();
+        shaderProgram.release();
+}
+
+void GLWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Up)
+    {
+        alpha += 0.1f;
+        if(alpha > 1.0)
+            alpha = 1.0f;
+    }
+
+    if(event->key() == Qt::Key_Down)
+    {
+        alpha -= 0.1f;
+        if(alpha < 0.0)
+            alpha = 0.0f;
+    }
+    update();
 }
 
 void GLWindow::initShaders()

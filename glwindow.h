@@ -7,6 +7,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include <QKeyEvent>
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core
 {
@@ -21,6 +22,8 @@ protected:
     void resizeGL(int w, int h);
     void paintGL();
 
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     void initShaders();
     void initTextures();
@@ -32,6 +35,8 @@ private:
 
     QOpenGLTexture *texture;
     QOpenGLTexture *texture1;
+
+    GLfloat alpha;
 };
 
 #endif // GLWINDOW_H
