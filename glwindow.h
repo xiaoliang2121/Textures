@@ -31,6 +31,7 @@ private:
     QOpenGLBuffer VboBuf, IboBuf;
 
     QOpenGLTexture *texture;
+    QOpenGLTexture *texture1;
 };
 
 #endif // GLWINDOW_H

@@ -11,7 +11,8 @@ struct VertexData
 
 GLWindow::GLWindow():
     IboBuf(QOpenGLBuffer::IndexBuffer),
-    texture(nullptr)
+    texture(nullptr),
+    texture1(nullptr)
 {
 }
 
@@ -21,6 +22,7 @@ GLWindow::~GLWindow()
     VboBuf.destroy();
     IboBuf.destroy();
     delete texture;
+    delete texture1;
     doneCurrent();
 }
 
@@ -66,6 +68,9 @@ void GLWindow::initializeGL()
     shaderProgram.enableAttributeArray(1);
     shaderProgram.enableAttributeArray(2);
 
+    shaderProgram.setUniformValue("ourTexture1",0);
+    shaderProgram.setUniformValue("ourTexture2",1);
+
     VaoObj.release();
     VboBuf.release();
     shaderProgram.release();
@@ -81,11 +86,15 @@ void GLWindow::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.bind();
-    texture->bind();
-    VaoObj.bind();
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-    VaoObj.release();
-    texture->release();
+        glActiveTexture(GL_TEXTURE0);
+        texture->bind();
+        glActiveTexture(GL_TEXTURE1);
+        texture1->bind();
+            VaoObj.bind();
+            glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+            VaoObj.release();
+        texture1->release();
+        texture->release();
     shaderProgram.release();
 }
 
@@ -108,10 +117,18 @@ void GLWindow::initShaders()
 
 void GLWindow::initTextures()
 {
+    // 纹理1
     texture = new QOpenGLTexture(QImage(":/container.jpg").mirrored());
 
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
 
     texture->setWrapMode(QOpenGLTexture::Repeat);
+    // 纹理2
+    texture1 = new QOpenGLTexture(QImage(":/awesomeface.png").mirrored());
+
+    texture1->setMinificationFilter(QOpenGLTexture::Nearest);
+    texture1->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    texture1->setWrapMode(QOpenGLTexture::Repeat);
 }
