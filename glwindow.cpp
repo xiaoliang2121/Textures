@@ -13,8 +13,13 @@ GLWindow::GLWindow():
     IboBuf(QOpenGLBuffer::IndexBuffer),
     texture(nullptr),
     texture1(nullptr),
-    alpha(0.2f)
+    alpha(0.2f),
+    angles(0.0f),
+    transform()
 {
+    timer = new QTimer(this);
+    connect(timer,&QTimer::timeout, this,&GLWindow::onTimerOut);
+    timer->start(1000);
 }
 
 GLWindow::~GLWindow()
@@ -25,6 +30,12 @@ GLWindow::~GLWindow()
     delete texture;
     delete texture1;
     doneCurrent();
+}
+
+void GLWindow::onTimerOut()
+{
+    angles += 1.0f;
+    update();
 }
 
 void GLWindow::initializeGL()
@@ -73,6 +84,9 @@ void GLWindow::initializeGL()
     shaderProgram.setUniformValue("ourTexture2",1);
     shaderProgram.setUniformValue("alpha",alpha);
 
+    transform.translate(QVector3D(0.5f, -0.5f, 0.0f));
+    transform.scale(QVector3D(0.5f, 0.5f, 0.5f));
+
     VaoObj.release();
     VboBuf.release();
     shaderProgram.release();
@@ -88,6 +102,8 @@ void GLWindow::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.bind();
+    transform.rotate(angles,QVector3D(0.0f, 0.0f, 1.0f));
+    shaderProgram.setUniformValue("transform",transform);
     shaderProgram.setUniformValue("alpha",alpha);
         glActiveTexture(GL_TEXTURE0);
         texture->bind();

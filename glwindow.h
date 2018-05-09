@@ -8,6 +8,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QKeyEvent>
+#include <QTimer>
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core
 {
@@ -16,6 +17,9 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core
 public:
     GLWindow();
     ~GLWindow();
+
+protected slots:
+    void onTimerOut();
 
 protected:
     void initializeGL();
@@ -37,6 +41,9 @@ private:
     QOpenGLTexture *texture1;
 
     GLfloat alpha;
+    QMatrix4x4 transform;
+    QTimer *timer;
+    float angles;
 };
 
 #endif // GLWINDOW_H
