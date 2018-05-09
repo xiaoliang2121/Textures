@@ -6,6 +6,7 @@ struct VertexData
 {
     QVector3D position;
     QVector2D texCoord;
+    QVector3D vertexColor;
 };
 
 GLWindow::GLWindow():
@@ -33,10 +34,10 @@ void GLWindow::initializeGL()
     initTextures();
 
     VertexData vertices[] = {
-        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(1.0f, 1.0f)},       // 右上
-        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(1.0f, 0.0f)},      // 右下
-        {QVector3D(-0.5f, -0.5f, 0.0f), QVector2D(0.0f, 0.0f)},     // 左下
-        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 1.0f)}       // 左上
+        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},       // 右上
+        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(1.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
+        {QVector3D(-0.5f, -0.5f, 0.0f), QVector2D(0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f)},     // 左下
+        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
     };
 
     GLuint indexs[] = {
@@ -60,8 +61,10 @@ void GLWindow::initializeGL()
 
     shaderProgram.setAttributeBuffer(0,GL_FLOAT,0,3,sizeof(VertexData));
     shaderProgram.setAttributeBuffer(1,GL_FLOAT,sizeof(QVector3D),2,sizeof(VertexData));
+    shaderProgram.setAttributeBuffer(2,GL_FLOAT,sizeof(QVector3D)+sizeof(QVector2D),3,sizeof(VertexData));
     shaderProgram.enableAttributeArray(0);
     shaderProgram.enableAttributeArray(1);
+    shaderProgram.enableAttributeArray(2);
 
     VaoObj.release();
     VboBuf.release();
