@@ -6,6 +6,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core
 {
@@ -28,6 +29,8 @@ private:
     QOpenGLShaderProgram shaderProgram;
     QOpenGLVertexArrayObject VaoObj;
     QOpenGLBuffer VboBuf, IboBuf;
+
+    QOpenGLTexture *texture;
 };
 
 #endif // GLWINDOW_H

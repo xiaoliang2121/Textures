@@ -31,7 +31,8 @@ HEADERS += \
         glwindow.h
 
 RESOURCES += \
-    shaders.qrc
+    shaders.qrc \
+    textures.qrc
 
 DISTFILES += \
     triangle.frag \
