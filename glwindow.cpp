@@ -36,10 +36,10 @@ void GLWindow::initializeGL()
     initTextures();
 
     VertexData vertices[] = {
-        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},       // 右上
-        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(1.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
+        {QVector3D(0.5f, 0.5f, 0.0f), QVector2D(2.0f, 2.0f), QVector3D(1.0f, 0.0f, 0.0f)},       // 右上
+        {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(2.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
         {QVector3D(-0.5f, -0.5f, 0.0f), QVector2D(0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f)},     // 左下
-        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
+        {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 2.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
     };
 
     GLuint indexs[] = {
