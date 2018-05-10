@@ -17,9 +17,7 @@ GLWindow::GLWindow():
     angles(0.0f),
     transform()
 {
-    timer = new QTimer(this);
-    connect(timer,&QTimer::timeout, this,&GLWindow::onTimerOut);
-    timer->start(1000);
+
 }
 
 GLWindow::~GLWindow()
@@ -30,12 +28,6 @@ GLWindow::~GLWindow()
     delete texture;
     delete texture1;
     doneCurrent();
-}
-
-void GLWindow::onTimerOut()
-{
-    angles += 1.0f;
-    update();
 }
 
 void GLWindow::initializeGL()
@@ -102,7 +94,9 @@ void GLWindow::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.bind();
-    transform.rotate(-100.0f,QVector3D(1.0f, 0.0f, 0.0f));
+    if(!transform.isIdentity())
+        transform = QMatrix4x4();
+    transform.rotate(angles,QVector3D(1.0f, 0.0f, 0.0f));
     shaderProgram.setUniformValue("transform",transform);
     shaderProgram.setUniformValue("alpha",alpha);
         glActiveTexture(GL_TEXTURE0);
@@ -132,6 +126,17 @@ void GLWindow::keyPressEvent(QKeyEvent *event)
         if(alpha < 0.0)
             alpha = 0.0f;
     }
+
+    if(event->key() == Qt::Key_Left)
+    {
+        angles -= 10.0f;
+    }
+
+    if(event->key() == Qt::Key_Right)
+    {
+        angles += 10.0f;
+    }
+
     update();
 }
 
