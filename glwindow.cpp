@@ -19,7 +19,18 @@ GLWindow::GLWindow():
     view(),
     projection()
 {
-
+    cubePositions = {
+        QVector3D( 0.0f,  0.0f,  0.0f),
+        QVector3D( 2.0f,  5.0f, -15.0f),
+        QVector3D(-1.5f, -2.2f, -2.5f),
+        QVector3D(-3.8f, -2.0f, -12.3f),
+        QVector3D( 2.4f, -0.4f, -3.5f),
+        QVector3D(-1.7f,  3.0f, -7.5f),
+        QVector3D( 1.3f, -2.0f, -2.5f),
+        QVector3D( 1.5f,  2.0f, -2.5f),
+        QVector3D( 1.5f,  0.2f, -1.5f),
+        QVector3D(-1.3f,  1.0f, -1.5f)
+    };
 }
 
 GLWindow::~GLWindow()
@@ -142,9 +153,9 @@ void GLWindow::paintGL()
 
     shaderProgram.bind();
 
-    if(!transform.isIdentity())
-        transform = QMatrix4x4();
-    transform.rotate(angles,QVector3D(0.5f, 1.0f, 0.0f));
+//    if(!transform.isIdentity())
+//        transform = QMatrix4x4();
+//    transform.rotate(angles,QVector3D(0.5f, 1.0f, 0.0f));
 
     if(!view.isIdentity())
         view = QMatrix4x4();
@@ -156,7 +167,7 @@ void GLWindow::paintGL()
 
     shaderProgram.setUniformValue("view",view);
     shaderProgram.setUniformValue("projection",projection);
-    shaderProgram.setUniformValue("transform",transform);
+//    shaderProgram.setUniformValue("transform",transform);
     shaderProgram.setUniformValue("alpha",alpha);
 
         glActiveTexture(GL_TEXTURE0);
@@ -165,7 +176,17 @@ void GLWindow::paintGL()
         texture1->bind();
             VaoObj.bind();
             //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-            glDrawArrays(GL_TRIANGLES,0,36);
+            for(int i=0; i<10; ++i)
+            {
+                if(!transform.isIdentity())
+                    transform = QMatrix4x4();
+                transform.translate(cubePositions[i]);
+                angles += 20 * i;
+                transform.rotate(angles,QVector3D(1.0f, 0.3f, 0.5f));
+                shaderProgram.setUniformValue("transform",transform);
+
+                glDrawArrays(GL_TRIANGLES,0,36);
+            }
             VaoObj.release();
         texture1->release();
         texture->release();

@@ -44,6 +44,7 @@ private:
     QMatrix4x4 transform;
     QMatrix4x4 view;
     QMatrix4x4 projection;
+    QVector<QVector3D> cubePositions;
 };
 
 #endif // GLWINDOW_H
