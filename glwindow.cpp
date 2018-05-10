@@ -159,7 +159,12 @@ void GLWindow::paintGL()
 
     if(!view.isIdentity())
         view = QMatrix4x4();
-    view.translate(QVector3D(0.0f, 0.0f, -3.0f));
+    //view.translate(QVector3D(0.0f, 0.0f, -3.0f));
+    float radius = 10.0f;
+    float camX = sin(rotateAngles) * radius;
+    float camZ = cos(rotateAngles) * radius;
+    view.lookAt(QVector3D(camX, 0.0f, camZ),QVector3D(0.0f, 0.0f, 0.0f),\
+                QVector3D(0.0f, 1.0f, 0.0f));
 
     if(!projection.isIdentity())
         projection = QMatrix4x4();
@@ -212,10 +217,20 @@ void GLWindow::keyPressEvent(QKeyEvent *event)
 
     if(event->key() == Qt::Key_Left)
     {
-        angles -= 10.0f;
+        rotateAngles -= 0.2f;
     }
 
     if(event->key() == Qt::Key_Right)
+    {
+        rotateAngles += 0.2f;
+    }
+
+    if(event->key() == Qt::Key_W)
+    {
+        angles -= 10.0f;
+    }
+
+    if(event->key() == Qt::Key_S)
     {
         angles += 10.0f;
     }

@@ -41,6 +41,7 @@ private:
 
     GLfloat alpha;
     float angles;
+    float rotateAngles;
     QMatrix4x4 transform;
     QMatrix4x4 view;
     QMatrix4x4 projection;
