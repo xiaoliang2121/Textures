@@ -31,6 +31,10 @@ GLWindow::GLWindow():
         QVector3D( 1.5f,  0.2f, -1.5f),
         QVector3D(-1.3f,  1.0f, -1.5f)
     };
+
+    camPos = QVector3D(0.0f, 0.0f,  3.0f);
+    camFront = QVector3D(0.0f, 0.0f, -1.0f);
+    camUp = QVector3D(0.0f, 1.0f,  0.0f);
 }
 
 GLWindow::~GLWindow()
@@ -160,11 +164,12 @@ void GLWindow::paintGL()
     if(!view.isIdentity())
         view = QMatrix4x4();
     //view.translate(QVector3D(0.0f, 0.0f, -3.0f));
-    float radius = 10.0f;
-    float camX = sin(rotateAngles) * radius;
-    float camZ = cos(rotateAngles) * radius;
-    view.lookAt(QVector3D(camX, 0.0f, camZ),QVector3D(0.0f, 0.0f, 0.0f),\
-                QVector3D(0.0f, 1.0f, 0.0f));
+//    float radius = 10.0f;
+//    float camX = sin(rotateAngles) * radius;
+//    float camZ = cos(rotateAngles) * radius;
+//    view.lookAt(QVector3D(camX, 0.0f, camZ),QVector3D(0.0f, 0.0f, 0.0f),
+//                QVector3D(0.0f, 1.0f, 0.0f));
+    view.lookAt(camPos,camPos+camFront, camUp);
 
     if(!projection.isIdentity())
         projection = QMatrix4x4();
@@ -225,14 +230,36 @@ void GLWindow::keyPressEvent(QKeyEvent *event)
         rotateAngles += 0.2f;
     }
 
-    if(event->key() == Qt::Key_W)
+    if(event->key() == Qt::Key_N)
     {
         angles -= 10.0f;
     }
 
-    if(event->key() == Qt::Key_S)
+    if(event->key() == Qt::Key_M)
     {
         angles += 10.0f;
+    }
+
+    float camSpeed = 0.15f;
+    if(event->key() == Qt::Key_W)
+    {
+        camPos += camSpeed * camFront;
+    }
+    if(event->key() == Qt::Key_S)
+    {
+        camPos -= camSpeed * camFront;
+    }
+    if(event->key() == Qt::Key_A)
+    {
+        QVector3D temp = QVector3D::crossProduct(camFront,camUp);
+        temp.normalize();
+        camPos -= temp * camSpeed;
+    }
+    if(event->key() == Qt::Key_D)
+    {
+        QVector3D temp = QVector3D::crossProduct(camFront,camUp);
+        temp.normalize();
+        camPos += temp * camSpeed;
     }
 
     update();

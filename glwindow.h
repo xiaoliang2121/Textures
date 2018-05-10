@@ -46,6 +46,10 @@ private:
     QMatrix4x4 view;
     QMatrix4x4 projection;
     QVector<QVector3D> cubePositions;
+
+    QVector3D camPos;
+    QVector3D camFront;
+    QVector3D camUp;
 };
 
 #endif // GLWINDOW_H
