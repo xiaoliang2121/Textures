@@ -8,6 +8,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QKeyEvent>
+#include <QBasicTimer>
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core
 {
@@ -26,10 +27,15 @@ protected:
     void paintGL();
 
     void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     void initShaders();
     void initTextures();
+    float radians(float x);
 
 private:
     QOpenGLShaderProgram shaderProgram;
@@ -44,6 +50,19 @@ private:
     QMatrix4x4 transform;
     QMatrix4x4 view;
     QMatrix4x4 projection;
+
+    QVector3D camPos;
+    QVector3D camFront;
+    QVector3D camUp;
+    QVector2D mousePressPos;
+    float yaw;
+    float pitch;
+    float fov;
+
+    QBasicTimer timer;
+    QVector3D rotationAxis;
+    qreal angularSpeed;
+    QQuaternion rotation;
 };
 
 #endif // GLWINDOW_H

@@ -2,6 +2,8 @@
 #include <QVector3D>
 #include <QVector2D>
 
+#define PI 3.1415926
+
 struct VertexData
 {
     QVector3D position;
@@ -17,9 +19,15 @@ GLWindow::GLWindow():
     angles(-55.0f),
     transform(),
     view(),
-    projection()
+    projection(),
+    yaw(-90.0f),
+    pitch(0.0f),
+    fov(45.0f),
+    angularSpeed(0.0)
 {
-
+    camPos = QVector3D(0.0f, 0.0f,  3.0f);
+    camFront = QVector3D(0.0f, 0.0f, -1.0f);
+    camUp = QVector3D(0.0f, 1.0f,  0.0f);
 }
 
 GLWindow::~GLWindow()
@@ -129,6 +137,8 @@ void GLWindow::initializeGL()
     VaoObj.release();
     VboBuf.release();
     shaderProgram.release();
+
+    //timer.start(100,this);
 }
 
 void GLWindow::resizeGL(int w, int h)
@@ -146,13 +156,17 @@ void GLWindow::paintGL()
         transform = QMatrix4x4();
     transform.rotate(angles,QVector3D(0.5f, 1.0f, 0.0f));
 
-    if(!view.isIdentity())
-        view = QMatrix4x4();
-    view.translate(QVector3D(0.0f, 0.0f, -3.0f));
+    if(view.isIdentity())
+    {
+        //view = QMatrix4x4();
+        view.translate(QVector3D(0.0f, 0.0f, -10.0f));
+    }
+    //view.lookAt(camPos,camPos+camFront,camUp);
+    view.rotate(rotation);
 
     if(!projection.isIdentity())
         projection = QMatrix4x4();
-    projection.perspective(45.0f,float(width())/height(),0.1f, 100.0f);
+    projection.perspective(fov,float(width())/height(),1.0f, 100.0f);
 
     shaderProgram.setUniformValue("view",view);
     shaderProgram.setUniformValue("projection",projection);
@@ -201,6 +215,70 @@ void GLWindow::keyPressEvent(QKeyEvent *event)
     update();
 }
 
+void GLWindow::mousePressEvent(QMouseEvent *event)
+{
+    mousePressPos = QVector2D(event->localPos());
+}
+
+void GLWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    QVector2D diff = QVector2D(event->localPos()) - mousePressPos;
+
+    QVector3D n = QVector3D(diff.y(),diff.x(),0.0f).normalized();
+    qreal acc = diff.length() / 100.0f;
+    rotationAxis = (n*acc).normalized();
+    //angularSpeed += acc;
+    rotation = QQuaternion::fromAxisAndAngle(rotationAxis, acc) * rotation;
+
+    update();
+//    float sensitivity = 0.005f;
+//    diff = diff * sensitivity;
+
+//    yaw += diff.x();
+//    pitch -= diff.y();
+
+//    if(pitch > 89.0f)
+//        pitch = 89.0f;
+//    if(pitch < -89.0f)
+//        pitch = -89.0f;
+
+//    float frontX = cos(radians(pitch)) * cos(radians(yaw));
+//    float frontY = sin(radians(pitch));
+//    float frontZ = cos(radians(pitch)) * sin(radians(yaw));
+//    QVector3D front = QVector3D(frontX, frontY, frontZ);
+//    camFront = front.normalized();
+}
+
+void GLWindow::timerEvent(QTimerEvent *event)
+{
+    angularSpeed *= 0.99;
+
+    if (angularSpeed < 0.01) {
+        angularSpeed = 0.0;
+    }else{
+        rotation = QQuaternion::fromAxisAndAngle(rotationAxis, angularSpeed) * rotation;
+        update();
+    }
+}
+
+void GLWindow::wheelEvent(QWheelEvent *event)
+{
+    if(event->delta() > 0)
+    {
+        fov += event->delta();
+        if(fov > 45.0f)
+            fov = 45.0f;
+    }
+    else
+    {
+        fov += event->delta();
+        if(fov < 1.0f)
+            fov = 1.0f;
+    }
+
+    update();
+}
+
 void GLWindow::initShaders()
 {
     if(!shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,":/triangle.vert"))
@@ -234,4 +312,9 @@ void GLWindow::initTextures()
     texture1->setMagnificationFilter(QOpenGLTexture::Linear);
 
     texture1->setWrapMode(QOpenGLTexture::Repeat);
+}
+
+float GLWindow::radians(float x)
+{
+    return x/180.0*PI;
 }
