@@ -14,8 +14,10 @@ GLWindow::GLWindow():
     texture(nullptr),
     texture1(nullptr),
     alpha(0.2f),
-    angles(0.0f),
-    transform()
+    angles(-55.0f),
+    transform(),
+    view(),
+    projection()
 {
 
 }
@@ -94,11 +96,24 @@ void GLWindow::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram.bind();
+
     if(!transform.isIdentity())
         transform = QMatrix4x4();
     transform.rotate(angles,QVector3D(1.0f, 0.0f, 0.0f));
+
+    if(!view.isIdentity())
+        view = QMatrix4x4();
+    view.translate(QVector3D(0.0f, 0.0f, -3.0f));
+
+    if(!projection.isIdentity())
+        projection = QMatrix4x4();
+    projection.perspective(45.0f,float(width())/height(),0.1f, 100.0f);
+
+    shaderProgram.setUniformValue("view",view);
+    shaderProgram.setUniformValue("projection",projection);
     shaderProgram.setUniformValue("transform",transform);
     shaderProgram.setUniformValue("alpha",alpha);
+
         glActiveTexture(GL_TEXTURE0);
         texture->bind();
         glActiveTexture(GL_TEXTURE1);

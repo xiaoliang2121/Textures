@@ -40,8 +40,10 @@ private:
     QOpenGLTexture *texture1;
 
     GLfloat alpha;
-    QMatrix4x4 transform;
     float angles;
+    QMatrix4x4 transform;
+    QMatrix4x4 view;
+    QMatrix4x4 projection;
 };
 
 #endif // GLWINDOW_H
