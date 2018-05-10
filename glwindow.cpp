@@ -176,13 +176,14 @@ void GLWindow::paintGL()
         texture1->bind();
             VaoObj.bind();
             //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+            float tempAngles = angles;
             for(int i=0; i<10; ++i)
             {
                 if(!transform.isIdentity())
                     transform = QMatrix4x4();
                 transform.translate(cubePositions[i]);
-                angles += 20 * i;
-                transform.rotate(angles,QVector3D(1.0f, 0.3f, 0.5f));
+                tempAngles += 20 * i;
+                transform.rotate(tempAngles,QVector3D(1.0f, 0.3f, 0.5f));
                 shaderProgram.setUniformValue("transform",transform);
 
                 glDrawArrays(GL_TRIANGLES,0,36);
