@@ -37,6 +37,7 @@ void GLWindow::initializeGL()
     initializeOpenGLFunctions();
 
     glClearColor(0.7f,0.7f,0.7f,1.0f);
+    glEnable(GL_DEPTH_TEST);
 
     initShaders();
     initTextures();
@@ -46,6 +47,50 @@ void GLWindow::initializeGL()
         {QVector3D(0.5f, -0.5f, 0.0f), QVector2D(1.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f)},      // 右下
         {QVector3D(-0.5f, -0.5f, 0.0f), QVector2D(0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f)},     // 左下
         {QVector3D(-0.5f, 0.5f, 0.0f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 1.0f, 0.0f)}       // 左上
+    };
+
+    VertexData vertices36[] = {
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f, -0.5f, -0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f,  0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+
+        {QVector3D(-0.5f, -0.5f, 0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f, -0.5f, 0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f, 0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f, 0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f,  0.5f, 0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, 0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+
+        {QVector3D(-0.5f, 0.5f, 0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, 0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, 0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, 0.5f, 0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+
+        {QVector3D(0.5f,  0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f, -0.5f,  0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(0.5f,  0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f, -0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f, -0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f, -0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f,  0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f, -0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+
+        {QVector3D(-0.5f,  0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f,  0.5f, -0.5f), QVector2D(1.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f,  0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D( 0.5f,  0.5f,  0.5f), QVector2D(1.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f,  0.5f,  0.5f), QVector2D(0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f)},
+        {QVector3D(-0.5f,  0.5f, -0.5f), QVector2D(0.0f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f)}
     };
 
     GLuint indexs[] = {
@@ -60,7 +105,7 @@ void GLWindow::initializeGL()
     VboBuf.create();
     VboBuf.bind();
     VboBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    VboBuf.allocate(vertices,4*sizeof(VertexData));
+    VboBuf.allocate(vertices36,36*sizeof(VertexData));
 
     IboBuf.create();
     IboBuf.bind();
@@ -93,13 +138,13 @@ void GLWindow::resizeGL(int w, int h)
 
 void GLWindow::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderProgram.bind();
 
     if(!transform.isIdentity())
         transform = QMatrix4x4();
-    transform.rotate(angles,QVector3D(1.0f, 0.0f, 0.0f));
+    transform.rotate(angles,QVector3D(0.5f, 1.0f, 0.0f));
 
     if(!view.isIdentity())
         view = QMatrix4x4();
@@ -119,7 +164,8 @@ void GLWindow::paintGL()
         glActiveTexture(GL_TEXTURE1);
         texture1->bind();
             VaoObj.bind();
-            glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+            //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+            glDrawArrays(GL_TRIANGLES,0,36);
             VaoObj.release();
         texture1->release();
         texture->release();
