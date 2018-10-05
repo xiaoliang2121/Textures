@@ -1,4 +1,4 @@
-#include "glwindow.h"
+﻿#include "glwindow.h"
 
 GLWindow::GLWindow():
     IboBuf(QOpenGLBuffer::IndexBuffer)
@@ -21,6 +21,28 @@ void GLWindow::initializeGL()
 
     initShaders();
     initTextures();
+
+    GLfloat vert[] = {
+        -0.5f, -0.5f ,0.0f,
+        0.5f,-0.5f, 0.0f,
+        0.0f,0.5f,0.0f
+    };
+
+    shaderProgram.bind();
+    VaoObj.create();
+    VaoObj.bind();
+
+    VboBuf.create();
+    VboBuf.bind();
+    VboBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    VboBuf.allocate(vert,9*sizeof(GLfloat));
+
+    shaderProgram.setAttributeBuffer(0,GL_FLOAT,0,3,3*sizeof(GLfloat));
+    shaderProgram.enableAttributeArray(0);
+
+    VaoObj.release();
+    VboBuf.release();
+    shaderProgram.release();
 }
 
 void GLWindow::resizeGL(int w, int h)
@@ -31,6 +53,13 @@ void GLWindow::resizeGL(int w, int h)
 void GLWindow::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    shaderProgram.bind();
+    VaoObj.bind();
+    glDrawArrays(GL_TRIANGLES,0,3);
+
+    VaoObj.release();
+    shaderProgram.release();
 }
 
 void GLWindow::initShaders()
